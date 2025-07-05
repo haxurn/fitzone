@@ -2,7 +2,49 @@
 
 **Your Ultimate Fitness Companion**
 
-FitZone is a modern, interactive web application designed to help you achieve your fitness goals. It combines beautiful UI, advanced animations, AI-powered coaching, and a suite of fitness tools—all in one place.
+---
+
+## 🌟 Preview
+
+> **See how FitZone looks!**
+
+<p align="center">
+  <img src="assets/landing.png" alt="Landing Page" width="700" />
+  <br><em>Landing Page</em>
+</p>
+
+<p align="center">
+  <img src="assets/ai.png" alt="AI Assistant" width="700" />
+  <br><em>AI Fitness Assistant</em>
+</p>
+
+<p align="center">
+  <img src="assets/bmi.png" alt="Fitness Tools" width="700" />
+  <br><em>Fitness Tools & Progress Tracker</em>
+</p>
+
+---
+
+## 📊 Project Stats & Insights
+
+<p align="center">
+  <img src="https://img.shields.io/github/stars/haxurn/fitzone?style=for-the-badge&color=6366f1" alt="GitHub stars" />
+  <img src="https://img.shields.io/github/forks/haxurn/fitzone?style=for-the-badge&color=06b6d4" alt="GitHub forks" />
+  <img src="https://img.shields.io/github/issues/haxurn/fitzone?style=for-the-badge&color=d946ef" alt="GitHub issues" />
+  <img src="https://img.shields.io/github/license/haxurn/fitzone?style=for-the-badge&color=a855f7" alt="License" />
+</p>
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=haxurn&repo=fitzone&theme=radical" alt="GitHub repo stats" />
+</p>
+
+---
+
+## ⭐ Star History
+
+<p align="center">
+  <img src="https://api.star-history.com/svg?repos=haxurn/fitzone&type=Date" alt="Star History Graph" width="700" />
+</p>
 
 ---
 
@@ -57,7 +99,7 @@ fitzone/
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/your-username/fitzone.git
+   git clone https://github.com/haxurn/fitzone.git
    cd fitzone
    ```
 2. **Open `index.html` in your browser.**
@@ -129,7 +171,7 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ## 📬 Contact
 
-For questions or feedback, please open an issue or contact [your-email@example.com](mailto:your-email@example.com).
+For questions or feedback, please open an issue or contact [samitesfaye726@gmail.com](mailto:samitesfaye726@gmail.com)
 
 ---
 
