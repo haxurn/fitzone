@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitZone - Your Ultimate Fitness Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: {
+                primary: {
+                    50: '#f0f4ff',
+                    100: '#e0e7ff',
+                    200: '#c7d2fe',
+                    300: '#a5b4fc',
+                    400: '#818cf8',
+                    500: '#6366f1',
+                    600: '#4f46e5',
+                    700: '#4338ca',
+                    800: '#3730a3',
+                    900: '#312e81'
+                },
+                accent: {
+                    50: '#ecfeff',
+                    100: '#cffafe',
+                    200: '#a5f3fc',
+                    300: '#67e8f9',
+                    400: '#22d3ee',
+                    500: '#06b6d4',
+                    600: '#0891b2',
+                    700: '#0e7490',
+                    800: '#155e75',
+                    900: '#164e63'
+                },
+                secondary: {
+                    50: '#fdf4ff',
+                    100: '#fae8ff',
+                    200: '#f5d0fe',
+                    300: '#f0abfc',
+                    400: '#e879f9',
+                    500: '#d946ef',
+                    600: '#c026d3',
+                    700: '#a21caf',
+                    800: '#86198f',
+                    900: '#701a75'
+                }
+            },
+            animation: {
+                'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                'fade-in-left': 'fadeInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                'fade-in-right': 'fadeInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                'pulse-slow': 'pulse 3s infinite',
+                'bounce-slow': 'bounce 2s infinite',
+                'spin-slow': 'spin 3s linear infinite',
+                'wiggle': 'wiggle 1s ease-in-out infinite',
+                'glow': 'glow 2s ease-in-out infinite alternate',
+                'float': 'float 3s ease-in-out infinite',
+                'slide-up': 'slideUp 0.6s ease-out',
+                'scale-in': 'scaleIn 0.5s ease-out',
+                'gradient-shift': 'gradientShift 3s ease-in-out infinite',
+                'typewriter': 'typewriter 4s steps(40) infinite',
+                'blink': 'blink 1s infinite',
+            },
+            backgroundImage: {
+                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+                'mesh-gradient': 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            },
+            boxShadow: {
+                'glow': '0 0 20px rgba(99, 102, 241, 0.5)',
+                'glow-lg': '0 0 40px rgba(99, 102, 241, 0.6)',
+                'neon': '0 0 5px theme(colors.accent.400), 0 0 20px theme(colors.accent.400), 0 0 35px theme(colors.accent.400)',
+                'inner-glow': 'inset 0 2px 4px 0 rgba(99, 102, 241, 0.2)',
+            }
+        }
+    }
+}
+    </script>
+    <style>
+        @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+}
+@keyframes glow {
+    from { box-shadow: 0 0 20px rgba(99, 102, 241, 0.5); }
+    to { box-shadow: 0 0 30px rgba(34, 211, 238, 0.8); }
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+@keyframes blink {
+    0%, 50% { border-color: transparent; }
+    51%, 100% { border-color: currentColor; }
+}
+
+.glass-effect {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+.dark .glass-effect {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.dark .gradient-text {
+    background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.animated-bg {
+    background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
+
+.card-hover {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-glow:hover::before {
+    left: 100%;
+}
+
+.floating-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.floating-shape {
+    position: absolute;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-shape:nth-child(1) { animation-delay: 0s; }
+.floating-shape:nth-child(2) { animation-delay: 1s; }
+.floating-shape:nth-child(3) { animation-delay: 2s; }
+.floating-shape:nth-child(4) { animation-delay: 3s; }
+.floating-shape:nth-child(5) { animation-delay: 4s; }
+
+.typewriter {
+    overflow: hidden;
+    border-right: 2px solid;
+    white-space: nowrap;
+    animation: typewriter 4s steps(40) infinite, blink 1s infinite;
+}
+
+.markdown-content h1 { @apply text-2xl font-bold mb-4 text-primary-600 dark:text-primary-400; }
+.markdown-content h2 { @apply text-xl font-bold mb-3 text-primary-600 dark:text-primary-400; }
+.markdown-content h3 { @apply text-lg font-semibold mb-2 text-primary-600 dark:text-primary-400; }
+.markdown-content p { @apply mb-3 leading-relaxed; }
+.markdown-content ul { @apply list-disc list-inside mb-3 space-y-1; }
+.markdown-content ol { @apply list-decimal list-inside mb-3 space-y-1; }
+.markdown-content li { @apply ml-4; }
+.markdown-content strong { @apply font-bold text-primary-700 dark:text-primary-300; }
+.markdown-content em { @apply italic; }
+.markdown-content code { @apply bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm font-mono; }
+.markdown-content pre { @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4; }
+.markdown-content blockquote { @apply border-l-4 border-primary-500 pl-4 italic text-gray-600 dark:text-gray-400 mb-4; }
+
+.book-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .book-card {
+    background: linear-gradient(145deg, #1f2937 0%, #111827 100%);
+}
+
+.book-card:hover {
+    transform: translateY(-8px) rotateY(5deg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.motivation-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.dark .motivation-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.nutrition-card {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.dark .nutrition-card {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 0.35s;
+    transform-origin: 50% 50%;
+}
+
+.workout-intensity-low { @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200; }
+.workout-intensity-medium { @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200; }
+.workout-intensity-high { @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200; }
+
+.equipment-tag { @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-2 py-1 rounded-full text-xs; }
+.muscle-tag { @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 px-2 py-1 rounded-full text-xs; }
+
+.stats-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .stats-card {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body {
+  @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+}
+
+main {
+  @apply max-w-3xl mx-auto py-8 px-4 space-y-10;
+}
+
+/* Tools Section Styles */
+.tool-section {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow p-6;
+}
+
+.tool-section h2 {
+  @apply text-xl font-bold mb-4;
+}
+
+.tool-section .input,
+.tool-section .btn {
+  @apply w-full;
+}
+
+.tool-section .input {
+  @apply input input-bordered;
+}
+
+.tool-section .btn {
+  @apply btn btn-primary;
+}
+
+.tool-section .result {
+  @apply mt-4;
+}
+
+.tool-section .result span {
+  @apply font-semibold;
+}
+
+/* Specific Styles for Each Tool */
+#bmi-calculator {
+  @apply bg-blue-50 dark:bg-blue-900/30;
+}
+
+#body-fat-calculator {
+  @apply bg-red-50 dark:bg-red-900/30;
+}
+
+#calorie-calculator {
+  @apply bg-green-50 dark:bg-green-900/30;
+}
+
+#one-rep-max-calculator {
+  @apply bg-purple-50 dark:bg-purple-900/30;
+}
+
+#workout-timer {
+  @apply bg-yellow-50 dark:bg-yellow-900/30;
+}
+
+#progress-tracker {
+  @apply bg-indigo-50 dark:bg-indigo-900/30;
+}
+
+.calorie-tracker {
+  @apply bg-teal-50 dark:bg-teal-900/30;
+}
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <!-- Navigation -->
+<nav class="fixed top-0 w-full z-50 glass-effect border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 group">
+                    <h1 class="text-3xl font-black gradient-text group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-dumbbell mr-2"></i>FitZone
+                    </h1>
+                </div>
+            </div>
+            
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-6">
+                    <a href="#home" class="nav-link relative px-4 py-2 rounded-xl text-sm font-semibold hover:text-primary-400 dark:hover:text-primary-300 transition-all duration-300 group">
+                        <span class="relative z-10"><i class="fas fa-home mr-2"></i>Home</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="#workouts" class="nav-link relative px-4 py-2 rounded-xl text-sm font-semibold hover:text-primary-400 dark:hover:text-primary-300 transition-all duration-300 group">
+                        <span class="relative z-10"><i class="fas fa-running mr-2"></i>Workouts</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="#nutrition" class="nav-link relative px-4 py-2 rounded-xl text-sm font-semibold hover:text-primary-400 dark:hover:text-primary-300 transition-all duration-300 group">
+                        <span class="relative z-10"><i class="fas fa-apple-alt mr-2"></i>Nutrition</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="#books" class="nav-link relative px-4 py-2 rounded-xl text-sm font-semibold hover:text-primary-400 dark:hover:text-primary-300 transition-all duration-300 group">
+                        <span class="relative z-10"><i class="fas fa-book mr-2"></i>Books</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="#motivation" class="nav-link relative px-4 py-2 rounded-xl text-sm font-semibold hover:text-primary-400 dark:hover:text-primary-300 transition-all duration-300 group">
+                        <span class="relative z-10"><i class="fas fa-fire mr-2"></i>Motivation</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="#bmi" class="nav-link relative px-4 py-2 rounded-xl text-sm font-semibold hover:text-primary-400 dark:hover:text-primary-300 transition-all duration-300 group">
+                        <span class="relative z-10"><i class="fas fa-calculator mr-2"></i>BMI</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="#ai-assistant" class="nav-link relative px-4 py-2 rounded-xl text-sm font-semibold hover:text-primary-400 dark:hover:text-primary-300 transition-all duration-300 group">
+                        <span class="relative z-10"><i class="fas fa-robot mr-2"></i>AI Coach</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-3 rounded-xl hover:bg-white/10 dark:hover:bg-white/5 transition-all duration-300 group">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-toggle-light-icon" class="hidden w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                
+                <button id="mobile-menu-button" class="md:hidden p-3 rounded-xl hover:bg-white/10 dark:hover:bg-white/5 transition-all duration-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Enhanced Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden glass-effect border-t border-white/10">
+        <div class="px-4 pt-4 pb-6 space-y-2">
+            <a href="#home" class="block px-4 py-3 rounded-xl text-base font-medium hover:text-primary-400 dark:hover:text-primary-300 hover:bg-white/10 transition-all duration-300"><i class="fas fa-home mr-2"></i>Home</a>
+            <a href="#workouts" class="block px-4 py-3 rounded-xl text-base font-medium hover:text-primary-400 dark:hover:text-primary-300 hover:bg-white/10 transition-all duration-300"><i class="fas fa-running mr-2"></i>Workouts</a>
+            <a href="#nutrition" class="block px-4 py-3 rounded-xl text-base font-medium hover:text-primary-400 dark:hover:text-primary-300 hover:bg-white/10 transition-all duration-300"><i class="fas fa-apple-alt mr-2"></i>Nutrition</a>
+            <a href="#books" class="block px-4 py-3 rounded-xl text-base font-medium hover:text-primary-400 dark:hover:text-primary-300 hover:bg-white/10 transition-all duration-300"><i class="fas fa-book mr-2"></i>Books</a>
+            <a href="#motivation" class="block px-4 py-3 rounded-xl text-base font-medium hover:text-primary-400 dark:hover:text-primary-300 hover:bg-white/10 transition-all duration-300"><i class="fas fa-fire mr-2"></i>Motivation</a>
+            <a href="#bmi" class="block px-4 py-3 rounded-xl text-base font-medium hover:text-primary-400 dark:hover:text-primary-300 hover:bg-white/10 transition-all duration-300"><i class="fas fa-calculator mr-2"></i>BMI</a>
+            <a href="#ai-assistant" class="block px-4 py-3 rounded-xl text-base font-medium hover:text-primary-400 dark:hover:text-primary-300 hover:bg-white/10 transition-all duration-300"><i class="fas fa-robot mr-2"></i>AI Coach</a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Hero Section -->
+<section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden animated-bg">
+    <div id="three-container" class="absolute inset-0 z-0"></div>
+    
+    <!-- Enhanced floating geometric shapes -->
+    <div class="floating-shapes">
+        <div class="floating-shape w-20 h-20 bg-gradient-to-r from-primary-400 to-accent-400 rounded-full top-20 left-10"></div>
+        <div class="floating-shape w-16 h-16 bg-gradient-to-r from-secondary-400 to-primary-400 rounded-lg top-40 right-20 rotate-45"></div>
+        <div class="floating-shape w-12 h-12 bg-gradient-to-r from-accent-400 to-secondary-400 rounded-full bottom-40 left-20"></div>
+        <div class="floating-shape w-24 h-24 bg-gradient-to-r from-primary-400 to-secondary-400 rounded-lg bottom-20 right-10 rotate-12"></div>
+        <div class="floating-shape w-8 h-8 bg-gradient-to-r from-accent-400 to-primary-400 rounded-full top-60 left-1/2"></div>
+        <div class="floating-shape w-14 h-14 bg-gradient-to-r from-secondary-400 to-accent-400 rounded-lg top-32 left-1/3 rotate-45"></div>
+        <div class="floating-shape w-10 h-10 bg-gradient-to-r from-primary-400 to-secondary-400 rounded-full bottom-32 right-1/3"></div>
+    </div>
+    
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-900/30 via-secondary-900/20 to-accent-900/30 z-10"></div>
+    
+    <div class="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div class="animate-fade-in-up">
+            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight">
+                Transform Your
+                <span class="block gradient-text animate-glow typewriter">
+                    Fitness Journey
+                </span>
+            </h1>
+        </div>
+        
+        <p class="text-xl md:text-3xl mb-12 text-gray-200 font-light animate-fade-in-up max-w-4xl mx-auto leading-relaxed" style="animation-delay: 0.3s;">
+            Discover personalized workouts, track your progress, and achieve your fitness goals with our 
+            <span class="text-accent-300 font-semibold">AI-powered platform</span>.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up" style="animation-delay: 0.6s;">
+            <button class="group px-10 py-5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-2xl transition-all duration-500 transform hover:scale-105 btn-glow shadow-glow hover:shadow-glow-lg">
+                <span class="flex items-center justify-center space-x-2">
+                    <i class="fas fa-rocket"></i>
+                    <span>Start Your Journey</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </span>
+            </button>
+            <button class="group px-10 py-5 border-2 border-accent-400/50 hover:border-accent-400 text-white font-bold rounded-2xl transition-all duration-500 hover:bg-accent-400/10 backdrop-blur-sm">
+                <span class="flex items-center justify-center space-x-2">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Watch Demo</span>
+                </span>
+            </button>
+        </div>
+        
+        <!-- Enhanced stats section -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 animate-fade-in-up" style="animation-delay: 0.9s;">
+            <div class="text-center stats-card p-6 rounded-2xl">
+                <div class="text-3xl md:text-4xl font-bold text-accent-300 counter" data-target="50000">0</div>
+                <div class="text-sm md:text-base text-gray-300 mt-1">Active Users</div>
+                <i class="fas fa-users text-accent-400 text-2xl mt-2"></i>
+            </div>
+            <div class="text-center stats-card p-6 rounded-2xl">
+                <div class="text-3xl md:text-4xl font-bold text-secondary-300 counter" data-target="1200">0</div>
+                <div class="text-sm md:text-base text-gray-300 mt-1">Workouts</div>
+                <i class="fas fa-dumbbell text-secondary-400 text-2xl mt-2"></i>
+            </div>
+            <div class="text-center stats-card p-6 rounded-2xl">
+                <div class="text-3xl md:text-4xl font-bold text-primary-300 counter" data-target="98">0</div>
+                <div class="text-sm md:text-base text-gray-300 mt-1">Success Rate</div>
+                <i class="fas fa-trophy text-primary-400 text-2xl mt-2"></i>
+            </div>
+            <div class="text-center stats-card p-6 rounded-2xl">
+                <div class="text-3xl md:text-4xl font-bold text-green-300 counter" data-target="24">0</div>
+                <div class="text-sm md:text-base text-gray-300 mt-1">Countries</div>
+                <i class="fas fa-globe text-green-400 text-2xl mt-2"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Enhanced scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce-slow">
+        <div class="flex flex-col items-center space-y-2">
+            <div class="w-6 h-10 border-2 border-accent-400 rounded-full flex justify-center">
+                <div class="w-1 h-3 bg-accent-400 rounded-full mt-2 animate-pulse"></div>
+            </div>
+            <span class="text-xs text-accent-300 font-medium">Scroll to Explore</span>
+        </div>
+    </div>
+</section>
+
+    <!-- Workouts Section -->
+    <section id="workouts" class="py-20 bg-white dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-running text-primary-600 mr-4"></i>
+                    Workout Categories
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    Choose from our comprehensive collection of workouts designed to meet your fitness goals.
+                </p>
+            </div>
+            
+            <!-- Enhanced Filter buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12 scroll-animate">
+                <button class="filter-btn active px-6 py-3 rounded-full font-semibold transition-all duration-300" data-filter="all">
+                    <i class="fas fa-th-large mr-2"></i>All Workouts
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full font-semibold transition-all duration-300" data-filter="cardio">
+                    <i class="fas fa-heartbeat mr-2"></i>Cardio
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full font-semibold transition-all duration-300" data-filter="strength">
+                    <i class="fas fa-dumbbell mr-2"></i>Strength
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full font-semibold transition-all duration-300" data-filter="flexibility">
+                    <i class="fas fa-leaf mr-2"></i>Flexibility
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full font-semibold transition-all duration-300" data-filter="hiit">
+                    <i class="fas fa-fire mr-2"></i>HIIT
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full font-semibold transition-all duration-300" data-filter="yoga">
+                    <i class="fas fa-spa mr-2"></i>Yoga
+                </button>
+            </div>
+            
+            <!-- Enhanced Workout cards -->
+            <div id="workout-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <!-- Cardio workouts -->
+    <div class="workout-card cardio scroll-animate card-hover bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+        <div class="relative h-56 overflow-hidden">
+            <iframe 
+                class="w-full h-full object-cover" 
+                src="https://www.youtube.com/embed/ml6cT4AZdqI?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                title="HIIT Cardio Workout" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute top-4 right-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-heartbeat text-white text-lg"></i>
+                </div>
+            </div>
+            <button class="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" data-video="ml6cT4AZdqI">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                </div>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="workout-intensity-high px-3 py-1 rounded-full text-sm font-bold">
+                    High Intensity
+                </span>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>30 min</span>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                HIIT Cardio Blast
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                Burn calories fast with this intense cardio workout designed to boost your metabolism.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="equipment-tag">No Equipment</span>
+                <span class="muscle-tag">Full Body</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow text-sm">
+                    <i class="fas fa-play mr-2"></i>Start
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Add to Favorites">
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Share">
+                    <i class="fas fa-share text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="workout-card cardio scroll-animate card-hover bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+        <div class="relative h-56 overflow-hidden">
+            <iframe 
+                class="w-full h-full object-cover" 
+                src="https://www.youtube.com/embed/ixkQaZXVQjs?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                title="Swimming Technique" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute top-4 right-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-swimmer text-white text-lg"></i>
+                </div>
+            </div>
+            <button class="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" data-video="ixkQaZXVQjs">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                </div>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="workout-intensity-medium px-3 py-1 rounded-full text-sm font-bold">
+                    Medium Intensity
+                </span>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>45 min</span>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                Swimming Mastery
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                Low-impact full-body cardio workout perfect for all fitness levels.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="equipment-tag">Pool Required</span>
+                <span class="muscle-tag">Full Body</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow text-sm">
+                    <i class="fas fa-play mr-2"></i>Start
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Add to Favorites">
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Share">
+                    <i class="fas fa-share text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Strength workouts -->
+    <div class="workout-card strength scroll-animate card-hover bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+        <div class="relative h-56 overflow-hidden">
+            <iframe 
+                class="w-full h-full object-cover" 
+                src="https://www.youtube.com/embed/IODxDxX7oi4?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                title="Upper Body Strength Training" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute top-4 right-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-dumbbell text-white text-lg"></i>
+                </div>
+            </div>
+            <button class="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" data-video="IODxDxX7oi4">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                </div>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="workout-intensity-high px-3 py-1 rounded-full text-sm font-bold">
+                    High Intensity
+                </span>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>60 min</span>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                Upper Body Power
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                Build muscle and strength in your chest, shoulders, arms, and back.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="equipment-tag">Dumbbells</span>
+                <span class="muscle-tag">Upper Body</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow text-sm">
+                    <i class="fas fa-play mr-2"></i>Start
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Add to Favorites">
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Share">
+                    <i class="fas fa-share text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="workout-card strength scroll-animate card-hover bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+        <div class="relative h-56 overflow-hidden">
+            <iframe 
+                class="w-full h-full object-cover" 
+                src="https://www.youtube.com/embed/Yx0BW-H5W0Y?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                title="Lower Body Strength Training" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute top-4 right-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-running text-white text-lg"></i>
+                </div>
+            </div>
+            <button class="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" data-video="vtS5Z5uQEiI">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                </div>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="workout-intensity-high px-3 py-1 rounded-full text-sm font-bold">
+                    High Intensity
+                </span>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>20 min</span>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                Lower Body Power
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                Strengthen your legs, glutes, and core with compound movements.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="equipment-tag">Barbell</span>
+                <span class="muscle-tag">Lower Body</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow text-sm">
+                    <i class="fas fa-play mr-2"></i>Start
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Add to Favorites">
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Share">
+                    <i class="fas fa-share text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Flexibility/Yoga workouts -->
+    <div class="workout-card flexibility yoga scroll-animate card-hover bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+        <div class="relative h-56 overflow-hidden">
+            <iframe 
+                class="w-full h-full object-cover" 
+                src="https://www.youtube.com/embed/v7AYKMP6rOE?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                title="Morning Yoga Flow" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute top-4 right-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-spa text-white text-lg"></i>
+                </div>
+            </div>
+            <button class="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" data-video="v7AYKMP6rOE">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                </div>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="workout-intensity-low px-3 py-1 rounded-full text-sm font-bold">
+                    Low Intensity
+                </span>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>30 min</span>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                Morning Yoga Flow
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                Start your day with gentle stretches and mindful movement.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="equipment-tag">Yoga Mat</span>
+                <span class="muscle-tag">Full Body</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow text-sm">
+                    <i class="fas fa-play mr-2"></i>Start
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Add to Favorites">
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Share">
+                    <i class="fas fa-share text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="workout-card flexibility scroll-animate card-hover bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+        <div class="relative h-56 overflow-hidden">
+            <iframe 
+                class="w-full h-full object-cover" 
+                src="https://www.youtube.com/embed/L_xrDAtykMI?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                title="Deep Stretch Recovery" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute top-4 right-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-leaf text-white text-lg"></i>
+                </div>
+            </div>
+            <button class="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" data-video="L_xrDAtykMI">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                </div>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="workout-intensity-low px-3 py-1 rounded-full text-sm font-bold">
+                    Low Intensity
+                </span>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>15 min</span>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                Deep Stretch Recovery
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                Relax and recover with deep stretching exercises.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="equipment-tag">No Equipment</span>
+                <span class="muscle-tag">Full Body</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow text-sm">
+                    <i class="fas fa-play mr-2"></i>Start
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Add to Favorites">
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Share">
+                    <i class="fas fa-share text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HIIT workouts -->
+    <div class="workout-card hiit scroll-animate card-hover bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+        <div class="relative h-56 overflow-hidden">
+            <iframe 
+                class="w-full h-full object-cover" 
+                src="https://www.youtube.com/embed/ZCcX2Egirp4?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                title="HIIT Tabata Workout" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute top-4 right-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-fire text-white text-lg"></i>
+                </div>
+            </div>
+            <button class="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" data-video="UBMk30rjy0o">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                </div>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="workout-intensity-high px-3 py-1 rounded-full text-sm font-bold">
+                    High Intensity
+                </span>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>15 min</span>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                Tabata HIIT Blast
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                Quick and intense 4-minute Tabata rounds for maximum results.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="equipment-tag">No Equipment</span>
+                <span class="muscle-tag">Full Body</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow text-sm">
+                    <i class="fas fa-play mr-2"></i>Start
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Add to Favorites">
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Share">
+                    <i class="fas fa-share text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional HIIT workout -->
+    <div class="workout-card hiit cardio scroll-animate card-hover bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+        <div class="relative h-56 overflow-hidden">
+            <iframe 
+                class="w-full h-full object-cover" 
+                src="https://www.youtube.com/embed/gC_L9qAHVJ8?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                title="Full Body HIIT" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute top-4 right-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-bolt text-white text-lg"></i>
+                </div>
+            </div>
+            <button class="video-play-btn absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" data-video="gC_L9qAHVJ8">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                </div>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="workout-intensity-high px-3 py-1 rounded-full text-sm font-bold">
+                    High Intensity
+                </span>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>30 min</span>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                Full Body HIIT
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                Complete full-body workout combining strength and cardio.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="equipment-tag">Dumbbells</span>
+                <span class="muscle-tag">Full Body</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow text-sm">
+                    <i class="fas fa-play mr-2"></i>Start
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Add to Favorites">
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button class="px-3 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors" title="Share">
+                    <i class="fas fa-share text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </section>
+
+    <!-- Nutrition Section -->
+    <section id="nutrition" class="py-20 bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-apple-alt text-green-600 mr-4"></i>
+                    Nutrition & Wellness
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    Fuel your body with the right nutrition for optimal performance and recovery.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Meal Plans -->
+                <div class="nutrition-card rounded-3xl p-8 scroll-animate">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-utensils text-green-600 dark:text-green-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Meal Plans</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Customized nutrition plans for your goals</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <span class="font-medium">Weight Loss Plan</span>
+                            <i class="fas fa-arrow-right text-primary-600"></i>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <span class="font-medium">Muscle Gain Plan</span>
+                            <i class="fas fa-arrow-right text-primary-600"></i>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <span class="font-medium">Maintenance Plan</span>
+                            <i class="fas fa-arrow-right text-primary-600"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calorie Tracker -->
+                <div class="nutrition-card rounded-3xl p-8 scroll-animate">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-pie text-blue-600 dark:text-blue-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Calorie Tracker</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Track your daily caloric intake</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary-600 dark:text-primary-400">1,847</div>
+                            <div class="text-sm text-gray-500">calories consumed</div>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                            <div class="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full" style="width: 75%"></div>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                            <span>Goal: 2,200</span>
+                            <span>Remaining: 353</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supplements -->
+                <div class="nutrition-card rounded-3xl p-8 scroll-animate">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-pills text-purple-600 dark:text-purple-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Supplements</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Recommended supplements for your goals</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                            <span class="font-medium">Protein Powder</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                            <span class="font-medium">Creatine</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
+                            <span class="font-medium">Vitamin D</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nutrition Tips -->
+            <div class="mt-16 scroll-animate">
+                <h3 class="text-3xl font-bold text-center mb-12">
+                    <i class="fas fa-lightbulb text-yellow-500 mr-3"></i>
+                    Nutrition Tips
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-center">
+                            <i class="fas fa-tint text-blue-500 text-3xl mb-4"></i>
+                            <h4 class="font-bold mb-2">Stay Hydrated</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Drink at least 8 glasses of water daily</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-center">
+                            <i class="fas fa-clock text-green-500 text-3xl mb-4"></i>
+                            <h4 class="font-bold mb-2">Meal Timing</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Eat every 3-4 hours to maintain energy</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-center">
+                            <i class="fas fa-leaf text-green-600 text-3xl mb-4"></i>
+                            <h4 class="font-bold mb-2">Eat Whole Foods</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Choose unprocessed, natural foods</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-center">
+                            <i class="fas fa-balance-scale text-purple-500 text-3xl mb-4"></i>
+                            <h4 class="font-bold mb-2">Portion Control</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Use smaller plates and mindful eating</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Books Section -->
+    <section id="books" class="py-20 bg-white dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-book text-primary-600 mr-4"></i>
+                    Fitness Library
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    Expand your knowledge with our curated collection of fitness and wellness books.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Book 1 -->
+                <div class="book-card rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 scroll-animate">
+                    <div class="relative mb-6">
+                        <div class="w-full h-64 bg-gradient-to-br from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-dumbbell text-white text-6xl"></i>
+                        </div>
+                        <div class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            FREE
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Strength Training 101</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                        Complete guide to building muscle and strength for beginners.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">(4.9)</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors text-sm">
+                            <i class="fas fa-download mr-2"></i>Download
+                        </button>
+                        <button class="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                            <i class="fas fa-bookmark text-gray-600 dark:text-gray-300"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Book 2 -->
+                <div class="book-card rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 scroll-animate">
+                    <div class="relative mb-6">
+                        <div class="w-full h-64 bg-gradient-to-br from-green-400 to-blue-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-apple-alt text-white text-6xl"></i>
+                        </div>
+                        <div class="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            $9.99
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Nutrition Mastery</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                        Master the art of nutrition for optimal health and performance.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">(4.7)</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors text-sm">
+                            <i class="fas fa-shopping-cart mr-2"></i>Buy Now
+                        </button>
+                        <button class="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                            <i class="fas fa-bookmark text-gray-600 dark:text-gray-300"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Book 3 -->
+                <div class="book-card rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 scroll-animate">
+                    <div class="relative mb-6">
+                        <div class="w-full h-64 bg-gradient-to-br from-purple-400 to-pink-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-6xl"></i>
+                        </div>
+                        <div class="absolute top-2 right-2 bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            $12.99
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Mental Fitness</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                        Develop mental resilience and motivation for lasting success.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">(4.8)</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors text-sm">
+                            <i class="fas fa-shopping-cart mr-2"></i>Buy Now
+                        </button>
+                        <button class="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                            <i class="fas fa-bookmark text-gray-600 dark:text-gray-300"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Book 4 -->
+                <div class="book-card rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 scroll-animate">
+                    <div class="relative mb-6">
+                        <div class="w-full h-64 bg-gradient-to-br from-orange-400 to-red-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-running text-white text-6xl"></i>
+                        </div>
+                        <div class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            FREE
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Cardio Revolution</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                        Transform your cardiovascular health with proven methods.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">(4.2)</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors text-sm">
+                            <i class="fas fa-download mr-2"></i>Download
+                        </button>
+                        <button class="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                            <i class="fas fa-bookmark text-gray-600 dark:text-gray-300"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Categories -->
+            <div class="mt-16 scroll-animate">
+                <h3 class="text-3xl font-bold text-center mb-12">Browse by Category</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                        <i class="fas fa-dumbbell text-3xl text-primary-600 mb-3"></i>
+                        <h4 class="font-semibold">Strength</h4>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                        <i class="fas fa-heartbeat text-3xl text-red-600 mb-3"></i>
+                        <h4 class="font-semibold">Cardio</h4>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                        <i class="fas fa-apple-alt text-3xl text-green-600 mb-3"></i>
+                        <h4 class="font-semibold">Nutrition</h4>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                        <i class="fas fa-spa text-3xl text-purple-600 mb-3"></i>
+                        <h4 class="font-semibold">Yoga</h4>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                        <i class="fas fa-brain text-3xl text-blue-600 mb-3"></i>
+                        <h4 class="font-semibold">Mental</h4>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                        <i class="fas fa-bed text-3xl text-indigo-600 mb-3"></i>
+                        <h4 class="font-semibold">Recovery</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.126.1/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.126.1/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+
+    <!-- Motivation Section -->
+    <section id="motivation" class="py-20 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-fire text-orange-500 mr-4"></i>
+                    Daily Motivation
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    Stay inspired and motivated on your fitness journey with daily quotes and challenges.
+                </p>
+            </div>
+
+            <!-- Quote of the Day -->
+            <div class="motivation-card rounded-3xl p-8 mb-12 text-center scroll-animate">
+                <div class="mb-6">
+                    <i class="fas fa-quote-left text-4xl text-primary-600 dark:text-primary-400 mb-4"></i>
+                    <blockquote class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-4">
+                        "The only bad workout is the one that didn't happen."
+                    </blockquote>
+                    <cite class="text-lg text-gray-600 dark:text-gray-400">- Unknown</cite>
+                </div>
+                <button class="px-8 py-3 bg-gradient-to-r from-primary-600 to-purple-600 text-white font-bold rounded-xl hover:from-primary-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-sync-alt mr-2"></i>New Quote
+                </button>
+            </div>
+
+            <!-- Motivation Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Challenge of the Day -->
+                <div class="motivation-card rounded-2xl p-6 scroll-animate">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-trophy text-orange-600 dark:text-orange-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Challenge of the Day</h3>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">50</div>
+                        <div class="text-lg font-semibold mb-4">Push-ups Challenge</div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6">Complete 50 push-ups throughout the day</p>
+                        <button class="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-colors">
+                            <i class="fas fa-check mr-2"></i>Accept Challenge
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Tracker -->
+                <div class="motivation-card rounded-2xl p-6 scroll-animate">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-line text-green-600 dark:text-green-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Weekly Progress</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium">Workouts Completed</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">4/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium">Calories Burned</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">2,100/2,500</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 84%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium">Water Intake</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">6/8 glasses</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-cyan-500 h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievement -->
+                <div class="motivation-card rounded-2xl p-6 scroll-animate">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-medal text-yellow-600 dark:text-yellow-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Latest Achievement</h3>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-2">
+                            <i class="fas fa-fire mr-2"></i>7 Day Streak
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">You've worked out 7 days in a row!</p>
+                        <div class="flex justify-center space-x-2">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motivational Videos -->
+            <div class="scroll-animate">
+                <h3 class="text-3xl font-bold text-center mb-12">
+                    <i class="fas fa-video text-red-500 mr-3"></i>
+                    Motivational Content
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="relative h-48">
+                            <iframe 
+                                class="w-full h-full" 
+                                src="https://www.youtube.com/embed/ZXsQAXx_ao0?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                                title="Motivational Video" 
+                                frameborder="0" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-lg font-bold mb-2">Never Give Up</h4>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">Powerful motivation to keep pushing forward</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="relative h-48">
+                            <iframe 
+                                class="w-full h-full" 
+                                src="https://www.youtube.com/embed/pN34FNbOKXc?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                                title="Success Mindset" 
+                                frameborder="0" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-lg font-bold mb-2">Success Mindset</h4>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">Develop the mindset of champions</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="relative h-48">
+                            <iframe 
+                                class="w-full h-full" 
+                                src="https://www.youtube.com/embed/hbkZrOU1Zag?controls=0&showinfo=0&rel=0&modestbranding=1" 
+                                title="Transform Your Life" 
+                                frameborder="0" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-lg font-bold mb-2">Transform Your Life</h4>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">Start your transformation journey today</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BMI Calculator Section -->
+    <section id="bmi" class="py-20 bg-gray-50 dark:bg-gray-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-calculator text-primary-600 mr-4"></i>
+                    BMI Calculator
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300">
+                    Calculate your Body Mass Index and get personalized health insights.
+                </p>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 scroll-animate">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Enter Your Details</h3>
+                        <form id="bmi-form" class="space-y-6">
+                            <div>
+                                <label for="height" class="block text-sm font-medium mb-2">
+                                    <i class="fas fa-ruler-vertical mr-2"></i>Height (cm)
+                                </label>
+                                <input type="number" id="height" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Enter your height in cm" required>
+                            </div>
+                            <div>
+                                <label for="weight" class="block text-sm font-medium mb-2">
+                                    <i class="fas fa-weight mr-2"></i>Weight (kg)
+                                </label>
+                                <input type="number" id="weight" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Enter your weight in kg" required>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors">
+                                <i class="fas fa-calculator mr-2"></i>Calculate BMI
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Your Results</h3>
+                        <div id="bmi-result" class="hidden">
+                            <div class="text-center p-6 bg-gray-50 dark:bg-gray-700 rounded-xl mb-6">
+                                <div class="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2" id="bmi-value">--</div>
+                                <div class="text-lg font-semibold" id="bmi-category">Calculate your BMI</div>
+                            </div>
+                            <div id="bmi-interpretation" class="space-y-4">
+                                <div class="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                                    <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                                        <i class="fas fa-info-circle mr-2"></i>What does this mean?
+                                    </h4>
+                                    <p id="bmi-meaning" class="text-blue-700 dark:text-blue-300 text-sm"></p>
+                                </div>
+                                <div class="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                                    <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">
+                                        <i class="fas fa-lightbulb mr-2"></i>Recommendations
+                                    </h4>
+                                    <p id="bmi-recommendations" class="text-green-700 dark:text-green-300 text-sm"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="bmi-placeholder" class="text-center py-12 text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-calculator text-6xl mb-4 opacity-50"></i>
+                            <p>Enter your details to calculate your BMI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Assistant Section -->
+    <section id="ai-assistant" class="py-20 bg-white dark:bg-gray-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-robot text-primary-600 mr-4"></i>
+                    AI Fitness Coach
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    Get personalized workout plans and meal recommendations powered by artificial intelligence.
+                </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden scroll-animate">
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <!-- Chat Interface -->
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-6">
+                            <i class="fas fa-comments mr-3"></i>Chat with Your AI Trainer
+                        </h3>
+                        <div id="chat-container" class="bg-white dark:bg-gray-800 rounded-xl p-4 h-96 overflow-y-auto mb-4 border border-gray-200 dark:border-gray-700">
+                            <div class="flex items-start space-x-3 mb-4">
+                                <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-robot text-white text-sm"></i>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 max-w-xs">
+                                    <p class="text-sm">Hello! I'm your AI fitness assistant. I can help you create personalized workout plans and meal recommendations. What are your fitness goals?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <input type="text" id="chat-input" placeholder="Ask me about workouts, nutrition, or fitness goals..." class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <button id="send-message" class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div id="loading-indicator" class="hidden mt-4 flex items-center justify-center">
+                            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                            <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">AI is thinking...</span>
+                        </div>
+                        
+                        <!-- API Key Input -->
+                        <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-key text-yellow-600 mr-2"></i>
+                                <span class="text-sm font-medium text-yellow-800 dark:text-yellow-200">OpenAI API Key</span>
+                            </div>
+                            <input type="password" id="api-key-input" placeholder="Enter your OpenAI API key to enable AI chat..." class="w-full px-3 py-2 text-sm border border-yellow-300 dark:border-yellow-700 rounded focus:ring-2 focus:ring-yellow-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                            <p class="text-xs text-yellow-700 dark:text-yellow-300 mt-1">Your API key is stored locally and never sent to our servers.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="p-8 bg-gradient-to-br from-primary-50 to-accent-50 dark:from-gray-800 dark:to-gray-700">
+                        <h3 class="text-2xl font-bold mb-6">
+                            <i class="fas fa-bolt mr-3"></i>Quick Actions
+                        </h3>
+                        <div class="space-y-4">
+                            <button class="quick-action-btn w-full p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-left" data-prompt="Create a beginner-friendly workout plan for weight loss">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-weight text-red-600 dark:text-red-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Weight Loss Plan</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Get a personalized workout for losing weight</p>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <button class="quick-action-btn w-full p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-left" data-prompt="Suggest a muscle building workout routine for intermediate level">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-dumbbell text-orange-600 dark:text-orange-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Muscle Building</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Build strength and muscle mass</p>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <button class="quick-action-btn w-full p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-left" data-prompt="Create a healthy meal plan for muscle gain with high protein foods">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-apple-alt text-green-600 dark:text-green-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Meal Planning</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Get nutrition advice and meal plans</p>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <button class="quick-action-btn w-full p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-left" data-prompt="Design a flexibility and mobility routine for better posture">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-spa text-blue-600 dark:text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Flexibility & Mobility</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Improve flexibility and posture</p>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <button class="quick-action-btn w-full p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-left" data-prompt="Create a HIIT workout routine for burning fat quickly">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-fire text-purple-600 dark:text-purple-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">HIIT Training</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">High-intensity interval training</p>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <button class="quick-action-btn w-full p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-left" data-prompt="Help me create a recovery and rest day routine">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-bed text-indigo-600 dark:text-indigo-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Recovery Plan</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Rest and recovery strategies</p>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="relative py-24 bg-gradient-to-br from-gray-900 via-purple-900/50 to-gray-900">
+        <!-- Background effects -->
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-900/20 to-accent-900/20"></div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-6 gradient-text animate-glow">
+                    Group Members
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Samson's Card -->
+                <div class="glass-effect rounded-3xl p-8 transform hover:scale-105 transition-all duration-300 card-hover group">
+                    <div class="relative mb-6">
+                        <div class="w-48 h-48 mx-auto rounded-2xl overflow-hidden glass-effect p-1">
+                            <img src="https://sdmntpritalynorth.oaiusercontent.com/files/b9bddbd226f7ad0_00000000-44f8-6246-b70a-d71d2b62982d/drvs/thumbnail/raw?se=2025-06-17T00%3A01%3A16Z&sp=r&sv=2024-08-04&sr=b&scid=762a050b-059e-5a41-9116-cebf5c37f982&skoid=c156db82-7a33-468f-9cdd-06af263ceec8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-06-16T08%3A47%3A32Z&ske=2025-06-17T08%3A47%3A32Z&sks=b&skv=2024-08-04&sig=kdfNWr95yuXxaqfJVxPWXLu8ggS/hRsshvQI%2BCjUgAA%3D" 
+                                 alt="Samson Tesfaye" 
+                                 class="w-full h-full object-cover rounded-xl group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                            <a href="https://x.com/haxurn" class="w-8 h-8 bg-gradient-to-r from-primary-600 to-primary-700 rounded-lg flex items-center justify-center hover:from-primary-500 hover:to-primary-600 transition-all duration-300 group">
+                                <i class="fab fa-twitter text-white text-sm group-hover:scale-110 transition-transform"></i>
+                            </a>
+                            <a href="https://github.com/haxurn" class="w-8 h-8 bg-gradient-to-r from-primary-600 to-primary-700 rounded-lg flex items-center justify-center hover:from-primary-500 hover:to-primary-600 transition-all duration-300 group">
+                                <i class="fab fa-github text-white text-sm group-hover:scale-110 transition-transform"></i>
+                            </a>
+                            <a href="https://instagram.com/haxurn" class="w-8 h-8 bg-gradient-to-r from-pink-600 to-pink-700 rounded-lg flex items-center justify-center hover:from-pink-500 hover:to-pink-600 transition-all duration-300 group">
+                                <i class="fab fa-instagram text-white text-sm group-hover:scale-110 transition-transform"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-2 text-white">Samson Tesfaye</h3>
+                    </div>
+                </div>
+
+                <!-- Placeholder for future team members -->
+                <div class="glass-effect rounded-3xl p-8 flex items-center justify-center group cursor-pointer hover:bg-white/5 transition-all duration-300">
+                    <div class="text-center">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary-500/20 to-accent-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-plus text-3xl text-primary-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-400">Mem</h3>
+                       
+                    </div>
+                </div>
+
+                <!-- Another placeholder -->
+                <div class="glass-effect rounded-3xl p-8 flex items-center justify-center group cursor-pointer hover:bg-white/5 transition-all duration-300">
+                    <div class="text-center">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary-500/20 to-accent-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-plus text-3xl text-primary-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-400">Mem</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white py-16 relative overflow-hidden">
+        <!-- Background effects -->
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-900/20 to-accent-900/20"></div>
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 via-accent-500 to-secondary-500"></div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="md:col-span-2">
+                    <h3 class="text-3xl font-black gradient-text mb-6">
+                        <i class="fas fa-dumbbell mr-2"></i>FitZone
+                    </h3>
+                    <p class="text-gray-300 mb-8 text-lg leading-relaxed max-w-md">
+                        Transform your fitness journey with personalized workouts and AI-powered guidance. 
+                        Join thousands of users achieving their fitness goals.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="group w-12 h-12 bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl flex items-center justify-center hover:from-primary-500 hover:to-primary-600 transition-all duration-300 transform hover:scale-110">
+                            <i class="fab fa-twitter text-white group-hover:scale-110 transition-transform"></i>
+                        </a>
+                        <a href="#" class="group w-12 h-12 bg-gradient-to-r from-accent-600 to-accent-700 rounded-xl flex items-center justify-center hover:from-accent-500 hover:to-accent-600 transition-all duration-300 transform hover:scale-110">
+                            <i class="fab fa-facebook text-white group-hover:scale-110 transition-transform"></i>
+                        </a>
+                        <a href="#" class="group w-12 h-12 bg-gradient-to-r from-secondary-600 to-secondary-700 rounded-xl flex items-center justify-center hover:from-secondary-500 hover:to-secondary-600 transition-all duration-300 transform hover:scale-110">
+                            <i class="fab fa-instagram text-white group-hover:scale-110 transition-transform"></i>
+                        </a>
+                        <a href="#" class="group w-12 h-12 bg-gradient-to-r from-pink-600 to-pink-700 rounded-xl flex items-center justify-center hover:from-pink-500 hover:to-pink-600 transition-all duration-300 transform hover:scale-110">
+                            <i class="fab fa-youtube text-white group-hover:scale-110 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-xl font-bold mb-6 text-primary-300">
+                        <i class="fas fa-dumbbell mr-2"></i>Workouts
+                    </h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-300 hover:text-accent-300 transition-colors duration-300 flex items-center group">
+                            <span class="w-2 h-2 bg-accent-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></span>
+                            Cardio Training
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-accent-300 transition-colors duration-300 flex items-center group">
+                            <span class="w-2 h-2 bg-accent-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></span>
+                            Strength Building
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-accent-300 transition-colors duration-300 flex items-center group">
+                            <span class="w-2 h-2 bg-accent-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></span>
+                            Flexibility & Yoga
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-accent-300 transition-colors duration-300 flex items-center group">
+                            <span class="w-2 h-2 bg-accent-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></span>
+                            HIIT Workouts
+                        </a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-xl font-bold mb-6 text-primary-300">
+                        <i class="fas fa-tools mr-2"></i>Tools & Support
+                    </h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-300 hover:text-accent-300 transition-colors duration-300 flex items-center group">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></span>
+                            BMI Calculator
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-accent-300 transition-colors duration-300 flex items-center group">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></span>
+                            AI Assistant
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-accent-300 transition-colors duration-300 flex items-center group">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></span>
+                            Progress Tracker
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-accent-300 transition-colors duration-300 flex items-center group">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></span>
+                            Help Center
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Newsletter Signup -->
+            <div class="mt-16 pt-12 border-t border-gray-700">
+                <div class="max-w-2xl mx-auto text-center">
+                    <h4 class="text-2xl font-bold mb-4">Stay Updated</h4>
+                    <p class="text-gray-300 mb-8">Get the latest fitness tips, workout plans, and exclusive content delivered to your inbox.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                        <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-sm">
+                        <button class="px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 btn-glow">
+                            <i class="fas fa-paper-plane mr-2"></i>Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="mt-12 pt-8 border-t border-gray-700 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 FitZone. All rights reserved. Built with passion for fitness and powered by Haxurn.
+                </p>
+                <div class="flex justify-center space-x-6 mt-4">
+                    <a href="#" class="text-gray-400 hover:text-accent-300 transition-colors text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-accent-300 transition-colors text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-accent-300 transition-colors text-sm">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Video Modal -->
+<div id="video-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="relative w-full max-w-4xl bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-2xl">
+        <button id="close-modal" class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors">
+            <i class="fas fa-times text-white"></i>
+        </button>
+        <div class="aspect-video">
+            <iframe id="modal-video" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+    <!-- Scripts -->
+    <script src="js/three-scene.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/ai-assistant.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/fitness-tools.js"></script>
+</body>
+</html>
